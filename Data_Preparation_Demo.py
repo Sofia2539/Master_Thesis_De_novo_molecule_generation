@@ -3,12 +3,12 @@ This demo is an updated version of the REINVENT notebook. It illustrates how
 data from ChEMBL are processed, analysed and filtered, using pandas DataFrame.
 '''
 
-'''Reasons to pre-process the data used for training a generative model:
+'''Pre-process the data used for training a generative model:
     1. Removal of invalid or duplicated entries.
     2. Removal of unusual compounds that are clearly not drug-like (too big, reactive groups and etc.). 
-    There is normally no point training model on such examples since that bias will reflected by the generative model.
+    Normally, no point in training a model on such examples since that bias will reflected by the generative model.
     3. Removal of rare tokens. 
-    There are rare compounds that can be seen as outliers. They in turn might contain rare tokens. 
+    There are rare compounds that can be seen as outliers and they might contain rare tokens. 
     Excluding them frees a slot in the vocabulary and makes it smaller. Smaller vocabulary means 
     faster training and less memory. As a result removing compounds that introduce rare tokens to 
     the vocabulary speeds up the generative model.
@@ -28,16 +28,14 @@ DBS_PATH = "/home/sofia/Downloads/Datasets/PIM1 Kinase/PIM1_dataset_SMILES.csv"
 output_dir = "/home/sofia/ReinventCommunity/Data_Preparation_demo"
 filtered_csv_file = f'{output_dir}/final.filtered_PIM1_dataset.csv'
 
-# Load data from SMILES file into a pandas DataFrame
+# Load data from SMILES file into pandas DataFrame
 chembl_df = pd.read_csv(DBS_PATH)
 # Remove duplicate entries
 chembl_df.drop_duplicates(inplace=True)
 
 def to_mol(smi):
     """
-    Creates a Mol object from a SMILES string.
-    :param smi: SMILES string.
-    :return: A Mol object or None if it's not valid.
+    Create Mol object from a SMILES string.
     """
     try:
         if smi:
@@ -49,8 +47,6 @@ def to_mol(smi):
 def to_smiles(mol):
     """
     Converts a Mol object into a canonical SMILES string.
-    :param mol: Mol object.
-    :return: A SMILES string.
     """
     try:
         if mol is not None:
@@ -61,7 +57,7 @@ def to_smiles(mol):
 
 def _run_reaction(mol, rxn):
     """
-    Apply a reaction to a molecule.
+    Apply a reaction to molecule.
     """
     while True:
         results = rxn.RunReactants([mol], maxProducts=1)
